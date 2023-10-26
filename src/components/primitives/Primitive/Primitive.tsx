@@ -39,3 +39,5 @@ export const Primitive = NODES.reduce((primitive, node) => {
   return { ...primitive, [node]: Node };
   /* eslint-enable*/
 }, {} as Primitives);
+
+export const Root = Primitive;
