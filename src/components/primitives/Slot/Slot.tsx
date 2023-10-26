@@ -2,7 +2,7 @@ import { Children, HTMLAttributes, ReactElement, ReactNode, cloneElement, forwar
 import { composeProps } from "@/utils/helpers/composeProps";
 import { composeRef } from "@/utils/helpers/composeRefs";
 
-interface SlotProps extends HTMLAttributes<HTMLElement> {
+export interface SlotProps extends HTMLAttributes<HTMLElement> {
   children?: ReactNode;
 }
 
@@ -10,27 +10,27 @@ interface SlotCloneProps {
   children: ReactNode;
 }
 
-const Slottable = ({ children }: { children: ReactNode }) => <>{children}</>;
+export const Slottable = ({ children }: { children: ReactNode }) => <>{children}</>;
 
 function isSlottable(child: ReactNode): child is ReactElement {
   return isValidElement(child) && child.type === Slottable;
 }
 
-// eslint-disable-next-line
+/* eslint-disable @typescript-eslint/no-explicit-any */
 const SlotClone = forwardRef<any, SlotCloneProps>(({ children, ...props }, forwardedRef) => {
   if (isValidElement(children)) {
-    // eslint-disable-next-line
     return cloneElement<any>(children, {
       ...composeProps(props, children.props),
-      // eslint-disable-next-line
+
       ref: forwardedRef ? composeRef(forwardedRef, (children as any).ref) : (children as any).ref,
     });
   }
   return Children.count(children) > 1 ? Children.only(null) : null;
 });
+/* eslint-enable*/
 SlotClone.displayName = "SlotClone";
 
-const Slot = forwardRef<HTMLElement, SlotProps>(({ children, ...props }, ref) => {
+export const Slot = forwardRef<HTMLElement, SlotProps>(({ children, ...props }, ref) => {
   const childrenArray = Children.toArray(children);
   const slottable = childrenArray.find(isSlottable);
 
@@ -60,3 +60,5 @@ const Slot = forwardRef<HTMLElement, SlotProps>(({ children, ...props }, ref) =>
   );
 });
 Slot.displayName = "Slot";
+
+export const Root = Slot;
